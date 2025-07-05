@@ -29,16 +29,9 @@ struct TodaysVMTest {
     }else{
       #expect(viewModel?.pageState != .loading)
     }
-   
   }
-
-  @Test func testgetTodayDataNotNil() async throws {
-    await viewModel?.fetchTodaysDateImage()
-    let data = viewModel?.pageState.data
-  }
-  
   @Test func test_DataModel() async throws {
-    await viewModel?.fetchTodaysDateImage()
+    #expect(await viewModel?.fetchTodaysDateImage() != nil)
     let data = viewModel?.pageState.data
     guard let item = data else{
       #expect(data == nil)
@@ -50,5 +43,28 @@ struct TodaysVMTest {
     #expect(data?.explanation != nil)
   }
 
+  @Test func test_reloadButton() async throws {
+      viewModel?.reloadInCaseOfError()
+      #expect(viewModel?.pageState == .loading)
+  }
+  
+  @Test func test_MockapiCall_Sucess() async {
+    let response = UITestMockResponseGenerator()
+    let mockNetwork = MockNetwork(responseMocker: response)
+    let result = await mockNetwork.getTodayImage()
+    switch result {
+    case .success(let model):
+      print(model)
+      #expect(true)
+    case .failure(let error):
+      print(error)
+      #expect(Bool(false))
+    }
+  }
+ 
+  @Test func test_MockModelTesting() async {
+    let mock = AstroImageModel(mock: true)
+    #expect(mock.title == "sample")
+  }
   
 }

@@ -16,14 +16,14 @@ struct SelectedDateVMTest {
     viewModel = .init()
   }
 
-  @Test func testViewModel_init() async throws {
+  @Test func test_ViewModel_init() async throws {
     #expect(viewModel != nil)
     #expect(viewModel?.pageState != nil)
     #expect(viewModel?.pageState == .loading)
     
   }
   
-  @Test func testgetTodayData() async throws {
+  @Test func test_getTodayData() async throws {
     await viewModel?.fetchSelectedsDateContent(date: "2025-05-07")
     if viewModel?.pageState == .loading{
       #expect(viewModel?.pageState == .loading)
@@ -32,7 +32,7 @@ struct SelectedDateVMTest {
     }
   }
 
-  @Test func testgetTodayDataNotNil() async throws {
+  @Test func testg_etTodayDataNotNil() async throws {
     await viewModel?.fetchSelectedsDateContent(date: "2025-05-07")
     let data = viewModel?.pageState.data
     guard let item = data else{
@@ -42,7 +42,7 @@ struct SelectedDateVMTest {
     #expect(type(of: item) == AstroImageModel.self)
   }
   @Test func test_DataModel() async throws {
-    await viewModel?.fetchSelectedsDateContent(date: "2025-05-07")
+    #expect(await viewModel?.fetchSelectedsDateContent(date: "2025-05-07") != nil)
     let data = viewModel?.pageState.data
     guard let item = data else{
       #expect(data == nil)
@@ -80,5 +80,37 @@ struct SelectedDateVMTest {
         #expect(type(of: error) == NetworkError.self)
       }
   }
-
+  @Test func test_reloadButton() async throws {
+      viewModel?.reloadInCaseOfError()
+      #expect(viewModel?.pageState == .loading)
+  }
+  @Test func test_dateSelected() async throws {
+      viewModel?.selectedDate = Date()
+      viewModel?.dateSelected()
+      #expect(viewModel?.pageState == .loading)
+    
+  }
+  @Test func test_MockapiCall() async {
+    let response = UITestMockResponseGenerator()
+    let mockNetwork = MockNetwork(responseMocker: response)
+    let result = await mockNetwork.getAstroImagesforSelectedDate(date: "")
+    switch result {
+    case .success(let model):
+       #expect(true)
+    case .failure(let error):
+      #expect(Bool(false))
+    }
+  }
+  @Test func test_MockapiCall_withVideo() async {
+    let response = UITestMockResponseGenerator()
+    let mockNetwork = MockNetwork(responseMocker: response)
+    let result = await mockNetwork.getAstroImagesforSelectedDate_withvideo(date: "")
+    switch result {
+    case .success(let model):
+       #expect(true)
+    case .failure(let error):
+      #expect(Bool(false))
+    }
+  }
+  
 }
