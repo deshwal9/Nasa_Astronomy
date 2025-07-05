@@ -10,22 +10,18 @@ import Foundation
 public struct NetworkError: Error {
     
     public let message: String
-    public let rawErrorTypeValue: String?
     public let errorType: NetworkErrorType
 }
 
 public extension NetworkError {
     init(errorType: NetworkErrorType) {
         message = ""
-        rawErrorTypeValue = errorType.rawValue
-        
         self.errorType = errorType
     }
     
     init(errorType: NetworkErrorType, message: String?) {
         self.message = message ?? ""
-        rawErrorTypeValue = errorType.rawValue
-        
+
         self.errorType = errorType
     }
 }
@@ -36,4 +32,5 @@ public enum NetworkErrorType: String {
     case notFound
     case generic
     case badRequest
+
 }

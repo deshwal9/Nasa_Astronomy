@@ -16,8 +16,6 @@ struct TodaysView: View {
         switch vm.pageState {
         case .loading:
           progressbarView
-        case .error(let error):
-          let _ = print("error: \(error)")
         case .loaded(let model):
           ScrollView(.vertical, showsIndicators: false) {
             LazyVStack(alignment: .leading, spacing: 8){
@@ -55,6 +53,17 @@ struct TodaysView: View {
           .background( Colors.backgroundColor.color )
         }
       }
+    }
+    .alert(isPresented: $vm.showAlert) {
+      Alert(
+        title: Text("Error"),
+        message: Text("Something went wrong"),
+        primaryButton: .cancel(),
+        secondaryButton: .default(
+          Text("Try again"),
+          action: {
+            vm.reloadInCaseOfError()
+          }))
     }
   }
   @ViewBuilder

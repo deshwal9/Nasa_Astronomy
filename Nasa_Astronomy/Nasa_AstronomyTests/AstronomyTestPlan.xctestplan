@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "2C628C8B-4102-495E-AB13-32FBCDDC737B",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Nasa_Astronomy.xcodeproj",
+        "identifier" : "BC7B84D12E134DCC00BEB3F1",
+        "name" : "Nasa_AstronomyTests"
+      }
+    }
+  ],
+  "version" : 1
+}

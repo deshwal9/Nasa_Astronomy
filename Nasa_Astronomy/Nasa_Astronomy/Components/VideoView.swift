@@ -10,9 +10,8 @@ import AVKit
 
 struct VideoView: View {
   @State private var player = AVPlayer()
-  
-  // Replace with your video URL (must be a direct .mp4 or streaming URL)
   var videoURL: URL
+  
   init(url:URL) {
     self.videoURL = url
   }

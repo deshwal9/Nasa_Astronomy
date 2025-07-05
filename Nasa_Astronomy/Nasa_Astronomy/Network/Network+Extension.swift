@@ -19,7 +19,7 @@ extension AstronomyNetwork: NetworkProtocol {
         let content = try JSONDecoder().decode(AstroImageModel.self, from: successResponse)
         return .success(content)
       } catch {
-        return .failure(NetworkError(errorType: .generic))
+        return .failure(NetworkError(errorType: .badRequest))
       }
     case .failure(let error):
       return .failure(error)
@@ -52,7 +52,7 @@ extension AstronomyNetwork: NetworkProtocol {
         let content = try JSONDecoder().decode(AstroImageModel.self, from: successResponse)
         return .success(content)
       } catch {
-        return .failure(NetworkError(errorType: .generic))
+        return .failure(NetworkError(errorType: .badRequest))
       }
     case .failure(let error):
       return .failure(error)

@@ -10,19 +10,15 @@ import Foundation
 class SelectedDateVM: ObservableObject {
   
   @Injected private var networkService: NetworkProtocol
-  // handle response
-  @Published var model:AstroImageModel?
+  
   // handle page state
   @Published var pageState: PageState = .loading
   
   @Published var selectedDate = Date() 
   @Published var showCalendar = false
+  @Published var showAlert = false
+  var error:NetworkError?
   
-  enum PageState {
-    case loading
-    case loaded(model: AstroImageModel)
-    case error(model:NetworkError)
-  }
   
   init() {
   Task {
@@ -30,6 +26,11 @@ class SelectedDateVM: ObservableObject {
     }
   }
   func dateSelected() {
+    Task {
+      await self.fetchSelectedsDateContent(date: selectedDate.toString)
+    }
+  }
+  func reloadInCaseOfError() {
     Task {
       await self.fetchSelectedsDateContent(date: selectedDate.toString)
     }
@@ -43,7 +44,8 @@ class SelectedDateVM: ObservableObject {
           pageState = .loaded(model: success)
         }
       case .failure(let error):
-        print(error)
+         self.error = error
+          showAlert.toggle()
       }
   }
   
