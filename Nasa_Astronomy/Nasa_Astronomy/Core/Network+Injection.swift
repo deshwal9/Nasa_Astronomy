@@ -11,7 +11,7 @@ extension Resolver {
   //TODO: to check mock server
   public static func registerMyNetworkServices() {
     let networkManager = AstronomyNetwork()
-    if ProcessInfo.processInfo.arguments.contains("-UITEST") ||  ProcessInfo.processInfo.arguments.contains("XCTestDevices"){
+    if ProcessInfo.processInfo.arguments.contains("-UITEST"){
       Resolver.main.register {
         MockNetwork(responseMocker: UITestMockResponseGenerator())
       }.implements(NetworkProtocol.self)
