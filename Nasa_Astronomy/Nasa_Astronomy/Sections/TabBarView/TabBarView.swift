@@ -10,7 +10,6 @@ import SwiftUI
 enum Tab {
   case today
   case week
-  case month
   case selectedDate
   
   var title: String {
@@ -19,8 +18,6 @@ enum Tab {
       return "Today"
     case .week:
       return "Week"
-    case .month:
-      return "Month"
     case .selectedDate:
       return "Date"
     }
