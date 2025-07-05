@@ -9,6 +9,8 @@ import Foundation
 
 public class MockNetwork: NetworkProtocol {
   
+  
+    
   var responseMocker: ResponseMocker
   
   public init(responseMocker: ResponseMocker) {
@@ -19,12 +21,12 @@ public class MockNetwork: NetworkProtocol {
     Result.failure(NetworkError(errorType: .generic))
   }
   
-  public func getAstroImagesForlastTenDaysImage() async -> Result<Data, NetworkError> {
+  public func getAstroImagesForlastTenDaysImage(date: String) async -> Result<AstroImageModel, NetworkError> {
     Result.failure(NetworkError(errorType: .generic))
   }
   
-  public func getAstroImagesforSelectedDate() async -> Result<Data, NetworkError> {
+  public func getAstroImagesforSelectedDate(date: String) async -> Result<AstroImageModel, NetworkError> {
     Result.failure(NetworkError(errorType: .generic))
   }
-  
+
 }

@@ -9,7 +9,14 @@ import Foundation
 class AstronomyNetwork: NetworkServiceProtocol {
   
   func fetchData(from url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+    let sessionConfiguration = URLSessionConfiguration.default
+    sessionConfiguration.timeoutIntervalForRequest = 10
+    sessionConfiguration.timeoutIntervalForResource = 10
+    sessionConfiguration.waitsForConnectivity = false
+    
+    let session = URLSession(configuration: sessionConfiguration)
+    
+    let task = session.dataTask(with: url, ) { data, response, error in
       guard (response as? HTTPURLResponse)?.statusCode == 200 else {
         completion(.failure(NetworkError(errorType: .serverError)))
         return

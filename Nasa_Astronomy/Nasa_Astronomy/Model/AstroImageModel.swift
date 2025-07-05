@@ -10,16 +10,21 @@ import Foundation
 protocol APODContent {
   var uid: UUID { get }
 }
+enum MediaType: String, Decodable {
+ case video
+ case image
+}
 
 public struct AstroImageModel: Decodable, APODContent {
     var uid = UUID()
     let date: String
     let explanation: String
     let hdurl: URL?
-    let mediaType: String
+    let mediaType: MediaType
     let serviceVersion: String
     let title: String
-    let url: URL
+    let url: URL?
+    let copyright: String?
     var id: UUID {
       uid
      }
@@ -32,5 +37,20 @@ public struct AstroImageModel: Decodable, APODContent {
         case serviceVersion = "service_version"
         case title
         case url
+        case copyright
     }
 }
+extension AstroImageModel{
+  public init(mock: Bool = false){
+    self.date = ""
+    self.explanation = ""
+    self.hdurl = nil
+    self.mediaType = .image
+    self.serviceVersion = ""
+    self.title = "sample"
+    self.url = nil
+    self.copyright = nil
+  }
+}
+
+

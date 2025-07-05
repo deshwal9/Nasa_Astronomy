@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-public typealias SimpleAction = () -> Void
 
 struct CacheAsyncImage<Content>: View where Content: View{
     private let imageURL: URL

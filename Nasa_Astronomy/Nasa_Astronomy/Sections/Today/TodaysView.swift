@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TodaysView: View {
- // @Environment(\.safeAreaInsets) internal var safeAreaInsets
+  // @Environment(\.safeAreaInsets) internal var safeAreaInsets
   @ObservedObject var vm = TodaysVM()
   var body: some View {
     NavigationStack() {
@@ -20,51 +20,42 @@ struct TodaysView: View {
           let _ = print("error: \(error)")
         case .loaded(let model):
           ScrollView(.vertical, showsIndicators: false) {
-            LazyVStack{
+            LazyVStack(alignment: .leading, spacing: 8){
+              VStack(alignment: .leading, spacing: 8){
+                Text(model.title)
+                  .font(.largeTitle)
+                  .fontWeight(.bold)
+                Text(model.date)
+                  .font(.subheadline)
+              }
+              .padding(.horizontal, 10)
               if let imageUrl =  model.hdurl {
                 VStack{
-                  
                   CacheAsyncImage(imageURL: imageUrl,scale: 0.8) { image in
                     image
                       .resizable()
                       .scaledToFill()
                       .contentShape(Rectangle())
-                      .frame(maxWidth: fullView.size.width, maxHeight: fullView.size.height * 0.8)
+                      .frame(maxWidth: fullView.size.width, maxHeight: fullView.size.height * 0.7)
                       .aspectRatio(contentMode: .fit)
-                     // .clipped()
-                  } 
+                      .animation(.linear(duration: 0.5), value: image)
+                  }
                 }
-                VStack(alignment: .leading, spacing: 8) {
-                  Text(model.title)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                  
-                  Text(model.date)
-                    .font(.subheadline)
-                  
-                  Text(model.explanation)
-                    .font(.body)
-                }
-                .padding(.horizontal, 10)
               }
+              Text(model.explanation)
+                .font(.body)
+                .padding(.horizontal, 10)
+              
             }
             .frame(maxWidth: .infinity, maxHeight:.infinity )
           }
           .padding(.bottom, 10 )
-          .ignoresSafeArea(edges: .top)
+          // .ignoresSafeArea(edges: .top)
           .frame(maxWidth: .infinity, maxHeight: .infinity)
           .background( Colors.backgroundColor.color )
         }
       }
     }
-   
-  }
-  private func imageView(imageUrl: URL?) -> some View {
-    VStack{
-      
-    }
-//    SFImageView(imageURL: imageUrl, contentMode: .fill, width: 84, height: 84)
-//      .makeVideoThumb(showPlayButton, iconType: .small)
   }
   @ViewBuilder
   var progressbarView: some View {

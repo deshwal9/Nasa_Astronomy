@@ -23,7 +23,8 @@ public struct AppParam {
 
 class NetworkManagerConstants {
   static let baseURL = "https://api.nasa.gov"
-  static let getTodayAstroImageUrl = "/planetary/apod?api_key="
+  static let getTodayAstroImageUrl = "/planetary/apod?api_key=%@"
+  static let getAstroDataForDateUrl = "/planetary/apod?api_key=%@&date=%@"
    
 }
 
@@ -31,8 +32,13 @@ class APIURL {
   static let baseUrl = NetworkManagerConstants.baseURL
   
   class func getTodayAstroImageUrl() -> String {
-      let serviceURL = NetworkManagerConstants.getTodayAstroImageUrl
+    let serviceURL = String(format:NetworkManagerConstants.getTodayAstroImageUrl, AppParam.configuration(.apiKey))
+    //let serviceURL = NetworkManagerConstants.getTodayAstroImageUrl
       return baseUrl + serviceURL
+  }
+  class func getAstroDataForDateUrl(date: String) -> String {
+    let serviceURL = String(format: NetworkManagerConstants.getAstroDataForDateUrl, AppParam.configuration(.apiKey), date)
+    return baseUrl + serviceURL
   }
 }
 
