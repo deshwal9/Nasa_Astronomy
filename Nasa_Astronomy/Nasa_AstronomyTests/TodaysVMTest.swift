@@ -21,15 +21,7 @@ struct TodaysVMTest {
     #expect(viewModel?.pageState == .loading)
     
   }
-  
-  @Test func testgetTodayData() async throws {
-    await viewModel?.fetchTodaysDateImage()
-    if viewModel?.pageState == .loading{
-      #expect(viewModel?.pageState == .loading)
-    }else{
-      #expect(viewModel?.pageState != .loading)
-    }
-  }
+
   @Test func test_DataModel() async throws {
     #expect(await viewModel?.fetchTodaysDateImage() != nil)
     let data = viewModel?.pageState.data

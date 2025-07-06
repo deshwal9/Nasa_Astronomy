@@ -8,6 +8,7 @@
 import XCTest
 
 final class Nasa_AstronomyUITestsLaunchTests: XCTestCase {
+  var app: XCUIApplication!
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
@@ -15,11 +16,12 @@ final class Nasa_AstronomyUITestsLaunchTests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        app = XCUIApplication()
     }
 
     @MainActor
     func testLaunch() throws {
-        let app = XCUIApplication()
+       
         app.launch()
 
         // Insert steps here to perform after app launch but before taking a screenshot,
