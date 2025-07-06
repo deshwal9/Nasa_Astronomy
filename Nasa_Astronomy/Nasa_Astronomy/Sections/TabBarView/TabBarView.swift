@@ -38,7 +38,7 @@ struct TabBarView: View {
             TabView {
               Group {
                 todayTab(with: proxy)
-                weekTab(with: proxy)
+               // weekTab(with: proxy)
                 selectedTab(with: proxy)
               }
             }
