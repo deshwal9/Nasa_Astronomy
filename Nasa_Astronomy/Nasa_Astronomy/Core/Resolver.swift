@@ -1,44 +1,12 @@
 //
-// Resolver.swift
+//  Resolver.swift
+//  Nasa_Astronomy
 //
-// GitHub Repo and Documentation: https://github.com/hmlongco/Resolver
-//
-// Copyright © 2017 Michael Long. All rights reserved.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-// © 2021 Amazon Web Services, Inc. or its affiliates. All Rights Reserved.
-// This AWS Content is provided subject to the terms of the AWS Customer Agreement available at
-// http://aws.amazon.com/agreement or other written agreement between Customer and either
-// Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
+//  Created by Ankit Deshwal on 01/07/2025.
 //
 
-#if os(iOS)
-import UIKit
 import SwiftUI
-#elseif os(macOS) || os(tvOS) || os(watchOS)
 import Foundation
-import SwiftUI
-#else
-import Foundation
-#endif
-
 // swiftlint:disable file_length
 
 public protocol ResolverRegistering {
@@ -61,7 +29,6 @@ extension Resolving {
 public final class Resolver {
 
     // MARK: - Defaults
-
     /// Default registry used by the static Registration functions.
     public static var main: Resolver = Resolver()
     /// Default registry used by the static Resolution functions and by the Resolving protocol.
@@ -80,13 +47,6 @@ public final class Resolver {
             self.childContainers.append(child)
         }
     }
-
-    /// Initializer which maintained Resolver 1.0's "parent" functionality even when multiple child scopes were added in 1.4.3.
-    @available(swift, deprecated: 5.0, message: "Please use Resolver(child:).")
-    public init(parent: Resolver) {
-        self.childContainers.append(parent)
-    }
-
     /// Adds a child container to this container. Children will be searched if this container fails to find a registration factory
     /// that matches the desired type.
     public func add(child: Resolver) {
@@ -120,12 +80,10 @@ public final class Resolver {
         root = main
         ResolverScope.application.reset()
         ResolverScope.cached.reset()
-        ResolverScope.shared.reset()
         registrationNeeded = true
     }
 
     // MARK: - Service Registration
-
     /// Static shortcut function used to register a specifc Service type and its instantiating factory method.
     ///
     /// - parameter type: Type of Service being registered. Optional, may be inferred by factory result type.
@@ -139,7 +97,6 @@ public final class Resolver {
                                          factory: @escaping ResolverFactory<Service>) -> ResolverOptions<Service> {
         return main.register(type, name: name, factory: factory)
     }
-
     /// Static shortcut function used to register a specific Service type and its instantiating factory method.
     ///
     /// - parameter type: Type of Service being registered. Optional, may be inferred by factory result type.
@@ -434,9 +391,7 @@ extension Resolver {
         public func get<T>(_ key: String) -> T {
             return (args[key] as? T)!
         }
-
     }
-
 }
 
 // Registration Internals
@@ -458,7 +413,7 @@ public typealias ResolverFactory<Service> = () -> Service?
 public typealias ResolverFactoryResolver<Service> = (_ resolver: Resolver) -> Service?
 public typealias ResolverFactoryArgumentsN<Service> = (_ resolver: Resolver, _ args: Resolver.Args) -> Service?
 public typealias ResolverFactoryAnyArguments<Service> = (_ resolver: Resolver, _ args: Any?) -> Service?
-public typealias ResolverFactoryMutator<Service> = (_ resolver: Resolver, _ service: Service) -> Void
+//public typealias ResolverFactoryMutator<Service> = (_ resolver: Resolver, _ service: Service) -> Void
 public typealias ResolverFactoryMutatorArgumentsN<Service> = (_ resolver: Resolver, _ service: Service, _ args: Resolver.Args) -> Void
 
 /// A ResolverOptions instance is returned by a registration function in order to allow additional configuration. (e.g. scopes, etc.)
@@ -490,19 +445,6 @@ public struct ResolverOptions<Service> {
     ///
     /// - returns: ResolverOptions instance that allows further customization of registered Service.
     ///
-    @discardableResult
-    public func resolveProperties(_ block: @escaping ResolverFactoryMutator<Service>) -> ResolverOptions<Service> {
-        registration.update { existingFactory in
-            return { (resolver, args) in
-                guard let service = existingFactory(resolver, args) else {
-                    return nil
-                }
-                block(resolver, service)
-                return service
-            }
-        }
-        return self
-    }
 
     /// Allows easy assignment of injected properties into resolved Service.
     ///
@@ -596,8 +538,6 @@ public class ResolverScope: ResolverScopeType {
     public static let cached = ResolverScopeCache()
     /// Graph services are initialized once and only once during a given resolution cycle. This is the default scope.
     public static let graph = ResolverScopeGraph()
-    /// Shared services persist while strong references to them exist. They're then deallocated until the next resolve.
-    public static let shared = ResolverScopeShare()
     /// Unique services are created and initialized each and every time they're resolved.
     public static let unique = ResolverScope()
 
@@ -662,33 +602,6 @@ public final class ResolverScopeGraph: ResolverScope {
     private var resolutionDepth: Int = 0
 }
 
-/// Shared services persist while strong references to them exist. They're then deallocated until the next resolve.
-public final class ResolverScopeShare: ResolverScope {
-
-    public override init() {}
-
-    public override final func resolve<Service>(registration: ResolverRegistration<Service>, resolver: Resolver, args: Any?) -> Service? {
-        if let service = cachedServices[registration.cacheKey]?.service as? Service {
-            return service
-        }
-        let service = registration.instantiate(resolver: resolver, args: args)
-        if let service = service, type(of: service as Any) is AnyClass {
-            cachedServices[registration.cacheKey] = BoxWeak(service: service as AnyObject)
-        }
-        return service
-    }
-
-    public override final func reset() {
-        cachedServices.removeAll()
-    }
-
-    private struct BoxWeak {
-        weak var service: AnyObject?
-    }
-
-    private var cachedServices = [String : BoxWeak](minimumCapacity: 32)
-}
-
 /// Unique services are created and initialized each and every time they're resolved. Performed by default implementation of ResolverScope.
 public typealias ResolverScopeUnique = ResolverScope
 
@@ -703,33 +616,6 @@ public final class ResolverScopeContainer: ResolverScope {
     
 }
 
-
-#if os(iOS)
-/// Storyboard Automatic Resolution Protocol
-public protocol StoryboardResolving: Resolving {
-    func resolveViewController()
-}
-
-/// Storyboard Automatic Resolution Trigger
-public extension UIViewController {
-    // swiftlint:disable unused_setter_value
-    @objc dynamic var resolving: Bool {
-        get {
-            return true
-        }
-        set {
-            if let vc = self as? StoryboardResolving {
-                vc.resolveViewController()
-            }
-        }
-    }
-    // swiftlint:enable unused_setter_value
-}
-#endif
-
-// Swift Property Wrappers
-
-#if swift(>=5.1)
 /// Immediate injection property wrapper.
 ///
 /// Wrapped dependent service is resolved immediately using Resolver.root upon struct initialization.
@@ -774,109 +660,6 @@ public extension UIViewController {
     }
 }
 
-/// Lazy injection property wrapper. Note that embedded container and name properties will be used if set prior to service instantiation.
-///
-/// Wrapped dependent service is not resolved until service is accessed.
-///
-@propertyWrapper public struct LazyInjected<Service> {
-    private var lock = Resolver.lock
-    private var initialize: Bool = true
-    private var service: Service!
-    public var container: Resolver?
-    public var name: Resolver.Name?
-    public var args: Any?
-    public init() {}
-    public init(name: Resolver.Name? = nil, container: Resolver? = nil) {
-        self.name = name
-        self.container = container
-    }
-    public var isEmpty: Bool {
-        lock.lock()
-        defer { lock.unlock() }
-        return service == nil
-    }
-    public var wrappedValue: Service {
-        mutating get {
-            lock.lock()
-            defer { lock.unlock() }
-            if initialize {
-                self.initialize = false
-                self.service = container?.resolve(Service.self, name: name, args: args) ?? Resolver.resolve(Service.self, name: name, args: args)
-            }
-            return service
-        }
-        mutating set {
-            lock.lock()
-            defer { lock.unlock() }
-            initialize = false
-            service = newValue
-        }
-    }
-    public var projectedValue: LazyInjected<Service> {
-        get { return self }
-        mutating set { self = newValue }
-    }
-    public mutating func release() {
-        lock.lock()
-        defer { lock.unlock() }
-        self.service = nil
-    }
-}
-
-/// Weak lazy injection property wrapper. Note that embedded container and name properties will be used if set prior to service instantiation.
-///
-/// Wrapped dependent service is not resolved until service is accessed.
-///
-@propertyWrapper public struct WeakLazyInjected<Service> {
-    private var lock = Resolver.lock
-    private var initialize: Bool = true
-    private weak var service: AnyObject?
-    public var container: Resolver?
-    public var name: Resolver.Name?
-    public var args: Any?
-    public init() {}
-    public init(name: Resolver.Name? = nil, container: Resolver? = nil) {
-        self.name = name
-        self.container = container
-    }
-    public var isEmpty: Bool {
-        lock.lock()
-        defer { lock.unlock() }
-        return service == nil
-    }
-    public var wrappedValue: Service? {
-        mutating get {
-            lock.lock()
-            defer { lock.unlock() }
-            if initialize {
-                self.initialize = false
-                self.service = (container?.resolve(Service.self, name: name, args: args)
-                                    ?? Resolver.resolve(Service.self, name: name, args: args)) as AnyObject
-            }
-            return service as? Service
-        }
-        mutating set {
-            lock.lock()
-            defer { lock.unlock() }
-            initialize = false
-            service = newValue as AnyObject
-        }
-    }
-    public var projectedValue: WeakLazyInjected<Service> {
-        get { return self }
-        mutating set { self = newValue }
-    }
-}
-
-#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
-/// Immediate injection property wrapper for SwiftUI ObservableObjects. This wrapper is meant for use in SwiftUI Views and exposes
-/// bindable objects similar to that of SwiftUI @observedObject and @environmentObject.
-///
-/// Dependent service must be of type ObservableObject. Updating object state will trigger view update.
-///
-/// Wrapped dependent service is resolved immediately using Resolver.root upon struct initialization.
-///
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 @propertyWrapper public struct InjectedObject<Service>: DynamicProperty where Service: ObservableObject {
     @ObservedObject private var service: Service
     public init() {
@@ -893,6 +676,3 @@ public extension UIViewController {
         return self.$service
     }
 }
-#endif
-#endif
-

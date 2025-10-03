@@ -27,27 +27,30 @@ class SelectedDateVM: ObservableObject {
   }
   func dateSelected() {
     Task {
-      await self.fetchSelectedsDateContent(date: selectedDate.toString)
+      await fetchSelectedsDateContent(date: selectedDate.toString)
     }
   }
   func reloadInCaseOfError() {
     Task {
-      await self.fetchSelectedsDateContent(date: selectedDate.toString)
+      await fetchSelectedsDateContent(date: selectedDate.toString)
     }
   }
   
-  func fetchSelectedsDateContent(date: String) async  {
-    let todayContent = await networkService.getAstroImagesforSelectedDate(date: date)
+  func fetchSelectedsDateContent(date: String) async {
+      let todayContent = await networkService.getAstroImagesforSelectedDate(date: date)
+
       switch todayContent {
       case .success(let success):
-        Task{ @MainActor in
-          pageState = .loaded(model: success)
-        }
+          await MainActor.run {
+              pageState = .loaded(model: success)
+          }
       case .failure(let error):
-         self.error = error
-          showAlert.toggle()
+          await MainActor.run {
+              self.error = error
+              showAlert.toggle()
+          }
       }
   }
-  
+ 
   
 }
