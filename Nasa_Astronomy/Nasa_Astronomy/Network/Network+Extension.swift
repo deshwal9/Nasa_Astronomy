@@ -25,23 +25,7 @@ extension AstronomyNetwork: NetworkProtocol {
       return .failure(error)
     }
   }
-  
-/// Api request call for to get the Astro  image for last 10 days
-  func getAstroImagesForlastTenDaysImage(date: String) async -> Result<AstroImageModel, NetworkError> {
-    let requestUrl = APIURL.getAstroDataForDateUrl(date: date)
-    let result = await self.fetchQuery(from: requestUrl)
-    switch result {
-    case .success(let successResponse):
-      do {
-        let content = try JSONDecoder().decode(AstroImageModel.self, from: successResponse)
-        return .success(AstroImageModel())
-      } catch {
-        return .failure(NetworkError(errorType: .generic))
-      }
-    case .failure(let error):
-      return .failure(error)
-    }
-  }
+
 /// Api request call for to get the Astro  image for selected date
   func getAstroImagesforSelectedDate(date: String) async -> Result<AstroImageModel, NetworkError> {
     let requestUrl = APIURL.getAstroDataForDateUrl(date: date)

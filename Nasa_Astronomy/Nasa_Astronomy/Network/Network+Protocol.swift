@@ -15,7 +15,6 @@ protocol NetworkServiceProtocol {
 // list of all request function
 public protocol NetworkProtocol: AnyObject {
   func getTodayImage() async -> Result<AstroImageModel, NetworkError>
-  func getAstroImagesForlastTenDaysImage(date: String) async -> Result<AstroImageModel, NetworkError>
   func getAstroImagesforSelectedDate(date: String) async -> Result<AstroImageModel, NetworkError>
 }
 
