@@ -2,7 +2,7 @@
 //  Untitled.swift
 //  Nasa_Astronomy
 //
-//  Created by Ankit Deshwal on 01/07/2025.
+//  Created by Ankit Deshwal on 01/10/2025.
 //
 
 import Foundation
@@ -13,6 +13,7 @@ protocol APODContent {
 enum MediaType: String, Decodable {
  case video
  case image
+ case other
 }
 
 public struct AstroImageModel: Decodable, APODContent {

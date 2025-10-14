@@ -2,19 +2,19 @@
 //  TodaysVM.swift
 //  Nasa_Astronomy
 //
-//  Created by Ankit Deshwal on 01/07/2025.
+//  Created by Ankit Deshwal on 01/10/2025.
 //
 
 import Foundation
 import SwiftUI
 
 class TodaysVM: ObservableObject {
-  @Injected private var networkService: NetworkProtocol
+  @Dependency private var networkService: NetworkProtocol
   
   // handle page state
   @Published var pageState: PageState = .loading
   @Published var showAlert = false
-  var error:NetworkError?
+  var error:NetworkError? 
   
   init() {
   Task {

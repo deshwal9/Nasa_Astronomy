@@ -2,7 +2,7 @@
 //  Nasa_AstronomyUITests.swift
 //  Nasa_AstronomyUITests
 //
-//  Created by Ankit Deshwal on 30/06/2025.
+//  Created by Ankit Deshwal on 01/10/2025.
 //
 
 import XCTest
@@ -17,6 +17,7 @@ final class Nasa_AstronomyUITests: XCTestCase {
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
         app = XCUIApplication()
+        app.launchArguments = ["-UITEST"]
         app.launch()
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }

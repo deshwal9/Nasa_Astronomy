@@ -18,6 +18,13 @@
         "identifier" : "BC7B84D12E134DCC00BEB3F1",
         "name" : "Nasa_AstronomyTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Nasa_Astronomy.xcodeproj",
+        "identifier" : "BC7B84DB2E134DCC00BEB3F1",
+        "name" : "Nasa_AstronomyUITests"
+      }
     }
   ],
   "version" : 1

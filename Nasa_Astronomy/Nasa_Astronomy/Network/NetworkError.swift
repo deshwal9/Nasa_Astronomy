@@ -2,7 +2,7 @@
 //  NetworkError.swift
 //  Nasa_Astronomy
 //
-//  Created by Ankit Deshwal on 01/07/2025.
+//  Created by Ankit Deshwal on 01/10/2025.
 //
 
 import Foundation
@@ -14,14 +14,13 @@ public struct NetworkError: Error {
 }
 
 public extension NetworkError {
-    init(errorType: NetworkErrorType) {
-        message = ""
+    init(errorType: NetworkErrorType, message: String = "") {
+        self.message = message
         self.errorType = errorType
     }
     
     init(errorType: NetworkErrorType, message: String?) {
         self.message = message ?? ""
-
         self.errorType = errorType
     }
 }

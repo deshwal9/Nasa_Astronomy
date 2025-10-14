@@ -2,7 +2,7 @@
 //  SelectedDateVMTest.swift
 //  Nasa_AstronomyTests
 //
-//  Created by Ankit Deshwal on 05/07/2025.
+//  Created by Ankit Deshwal on 05/10/2025.
 //
 
 import Testing
@@ -10,7 +10,7 @@ import SwiftUI
 @testable import Nasa_Astronomy
 
 struct SelectedDateVMTest {
-  @Injected private var networkService: NetworkProtocol
+  @Dependency private var networkService: NetworkProtocol
   var viewModel: SelectedDateVM?
   @MainActor init(){
     viewModel = .init()
@@ -32,7 +32,7 @@ struct SelectedDateVMTest {
     }
   }
 
-  @Test func testg_etTodayDataNotNil() async throws {
+  @Test func testg_getTodayDataNotNil() async throws {
     await viewModel?.fetchSelectedsDateContent(date: "2025-05-07")
     let data = viewModel?.pageState.data
     guard let item = data else{
@@ -57,9 +57,11 @@ struct SelectedDateVMTest {
     await viewModel?.fetchSelectedsDateContent(date: "2025-05")
     let data = viewModel?.pageState.data
     guard let item = data else{
-      #expect(data == nil)
+      #expect(data == nil, "AstroImageModel should be empty because of wrong date format")
       return
     }
+    #expect(type(of: item) == AstroImageModel.self)
+    #expect(data?.title.isEmpty == false, "AstroImageModel should contain title")
   }
   
   @Test func test_ApiConnection() async throws {
@@ -96,9 +98,10 @@ struct SelectedDateVMTest {
     let result = await mockNetwork.getAstroImagesforSelectedDate(date: "")
     switch result {
     case .success(let model):
-       #expect(true)
+      #expect(true, "API call succeeded")
+      #expect(model.title.isEmpty == false, "AstroImageModel should contain title")
     case .failure(let error):
-      #expect(Bool(false))
+      #expect(Bool(false), "API call return Error \(error)")
     }
   }
   @Test func test_MockapiCall_withVideo() async {
@@ -107,9 +110,10 @@ struct SelectedDateVMTest {
     let result = await mockNetwork.getAstroImagesforSelectedDate_withvideo(date: "")
     switch result {
     case .success(let model):
-       #expect(true)
+      #expect(true, "API call succeeded")
+      #expect(model.title.isEmpty == false, "AstroImageModel should contain title")
     case .failure(let error):
-      #expect(Bool(false))
+      #expect(Bool(false), "API call return Error \(error)")
     }
   }
   

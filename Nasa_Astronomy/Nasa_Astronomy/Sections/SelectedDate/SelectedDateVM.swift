@@ -2,14 +2,14 @@
 //  SelectedDateVM.swift
 //  Nasa_Astronomy
 //
-//  Created by Ankit Deshwal on 01/07/2025.
+//  Created by Ankit Deshwal on 01/10/2025.
 //
 
 import Foundation
 
 class SelectedDateVM: ObservableObject {
   
-  @Injected private var networkService: NetworkProtocol
+  @Dependency private var networkService: NetworkProtocol
   
   // handle page state
   @Published var pageState: PageState = .loading
@@ -31,6 +31,7 @@ class SelectedDateVM: ObservableObject {
     }
   }
   func reloadInCaseOfError() {
+    showAlert = false
     Task {
       await fetchSelectedsDateContent(date: selectedDate.toString)
     }
