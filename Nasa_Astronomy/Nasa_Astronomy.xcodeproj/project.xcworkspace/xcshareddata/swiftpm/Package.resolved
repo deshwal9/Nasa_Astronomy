@@ -1,0 +1,15 @@
+{
+  "originHash" : "0635af5d7ce491278603b2b30a0b75ff55a28f52aa6ddd13cf68da3faf396856",
+  "pins" : [
+    {
+      "identity" : "designsystempackage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/deshwal9/DesignSystemPackage",
+      "state" : {
+        "branch" : "main",
+        "revision" : "aa264c2462005b0572d5de3dd697b7c417296c68"
+      }
+    }
+  ],
+  "version" : 3
+}

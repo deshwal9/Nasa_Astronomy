@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BC15B8FC2EAFB62000548E97 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = BC15B8FB2EAFB62000548E97 /* DesignSystem */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		BC7B84D32E134DCC00BEB3F1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC15B8FC2EAFB62000548E97 /* DesignSystem in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = Nasa_Astronomy;
 			packageProductDependencies = (
+				BC15B8FB2EAFB62000548E97 /* DesignSystem */,
 			);
 			productName = Nasa_Astronomy;
 			productReference = BC7B84C42E134DCA00BEB3F1 /* Nasa_Astronomy.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = BC7B84BB2E134DCA00BEB3F1;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BC15B8FA2EAFB62000548E97 /* XCRemoteSwiftPackageReference "DesignSystemPackage" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BC7B84C52E134DCA00BEB3F1 /* Products */;
 			projectDirPath = "";
@@ -599,6 +608,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BC15B8FA2EAFB62000548E97 /* XCRemoteSwiftPackageReference "DesignSystemPackage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/deshwal9/DesignSystemPackage";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BC15B8FB2EAFB62000548E97 /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC15B8FA2EAFB62000548E97 /* XCRemoteSwiftPackageReference "DesignSystemPackage" */;
+			productName = DesignSystem;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BC7B84BC2E134DCA00BEB3F1 /* Project object */;
 }
